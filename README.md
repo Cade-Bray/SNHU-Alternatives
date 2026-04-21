@@ -1,20 +1,20 @@
-# <a href="https://github.com/Cade-Bray/SNHU-Shortcut"><img src=".images/Logo.jpg?raw=true" alt="Project Logo" style="width:200px; height:auto;"></a>
+# <a href="https://github.com/Cade-Bray/SNHU-Alternatives"><img src="rss/images/Icon.png?raw=true" alt="Project Logo" style="width:200px; height:auto;"></a>
 
-### This application is now also a <a href="https://snhu.cadebray.com/">Web Application</a>!
+### This application is now also a <a href="https://cade-bray.github.io/SNHU-Alternatives/">Web Application</a>!
 If you prefer a web interface, you can use the web application to search for SNHU course certificates without needing to
-run the Python script locally. The web app provides the same functionality and is hosted online for easy access. Updates
-are to come in the future to the web app, so please check back often! If you'd like to contribute to this project, please
-make a pull request or open an issue on the GitHub repository. If you're having an issue with either the web app or the
-Python script, please make a GitHub issue, so I can address it as soon as possible.
+run the Python script locally. The web app provides the same functionality and is hosted online as a GitHub page for easy 
+access. Updates are to come in the future to the web app, so please check back often! If you'd like to contribute to 
+this project, please make a pull request or open an issue on the GitHub repository. If you're having an issue with 
+either the web app or the Python script, please make a GitHub issue, so I can address it as soon as possible.
 
 I was very frustrated with the SNHU certificate page because it organized everything by provider.
 Since it was organized in this way users have to 'hunt and peck' for certificates that cover classes
 they're looking to take outside of SNHU. With this application you can execute the py file to pull and
 organize all the certificates from SNHU's public API provider. The program will provide you with a prompt
 for a course code (i.e. IT145 in this format). It may take a few moments for the program to go through all
-the certificates in the catalog so please be patient. Once a valid course code is provided a returned list of all
-certificates that transfer in as that class will be provided. My hope for this project is to enable students
-with the information needed to quickly make decisions about their education.
+the certificates in the catalog so please be patient (not applicable for the web version). Once a valid course code is 
+provided a returned list of all certificates that transfer in as that class will be provided. My hope for this project 
+is to enable students with the information needed to quickly make decisions about their education.
 
 
 ### Terminal example
