@@ -166,10 +166,6 @@ function courseCard(course) {
 		<div class="course-header mb-3">
 		  <div>
 			<span class="code-pill">${escapeHtml(course.title || '')}</span>
-			<div class="mt-3">
-			  <div class="small text-muted mb-1">Credits</div>
-			  <span class="credits-pill">${escapeHtml(course.credits || '—')}</span>
-			</div>
 		  </div>
 		  <span class="count-pill">${certs.length} match${certs.length === 1 ? '' : 'es'}</span>
 		</div>
