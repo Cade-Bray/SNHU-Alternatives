@@ -155,7 +155,7 @@ def get_courses():
 
 def load_courses(force=False, terminal=False) -> dict:
     """
-    This function will check if there is a json file in the appdata directory called courses.json. If the file exists,
+    This function will check if there is a json file in the repository rss directory called courses.json. If the file exists,
     the function will load the file and return a dictionary of Course objects. If the file does not exist, the function
     will call the get_courses() function to get the courses from the Kuali API and save them to a json file. It will
     also check if the file is older than 24 hours. If the file is older than 24 hours, the function will call the
@@ -164,23 +164,14 @@ def load_courses(force=False, terminal=False) -> dict:
     :return: A dictionary of Course objects
     """
 
-    # Get the APPDATA environment variable
-    if terminal:
-        # If terminal is True, use the APPDATA environment variable
-        app_data_dir = os.getenv('APPDATA')
-        if not app_data_dir:
-            raise EnvironmentError("The 'APPDATA' environment variable is not set.")
-    else:
-        # If terminal is False, the current directory executed from.
-        app_data_dir = os.getcwd()
-
-    # Create folder in appdata if it doesn't exist
-    app_data_path = os.path.join(app_data_dir, 'SNHU-Shortcut')
-    if not os.path.exists(app_data_path):
-        os.makedirs(app_data_path)
+    # Cache is always stored in the project rss folder for static site compatibility.
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    rss_path = os.path.join(project_root, 'rss')
+    if not os.path.exists(rss_path):
+        os.makedirs(rss_path)
 
     # Check if the file exists
-    json_path = os.path.join(app_data_path, 'courses.json')
+    json_path = os.path.join(rss_path, 'courses.json')
     if os.path.exists(json_path) or force:
 
         if not force:

@@ -1,0 +1,207 @@
+/* White + coffee palette */
+:root {
+  --coffee: #7a4f2b;
+  --coffee-dark: #56361e;
+  --coffee-soft: #e8d8c8;
+  --cream: #fbf7f2;
+  --paper: #ffffff;
+  --text: #2d1f16;
+  --muted: #6f6158;
+  --border: #eadfd4;
+  --shadow: 0 14px 35px rgba(122, 79, 43, 0.08);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body.bg-cream {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(circle at top, #fff 0%, var(--cream) 52%, #f4ece4 100%);
+  color: var(--text);
+}
+
+.text-brown {
+  color: var(--text);
+}
+
+.hero-card,
+.info-card,
+.course-card,
+.mini-card,
+.cert-card {
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.brand-logo {
+  width: 160px;
+  max-width: 42vw;
+  border-radius: 0;
+  object-fit: contain;
+  box-shadow: none;
+}
+
+.eyebrow {
+  color: var(--coffee);
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+
+.form-control {
+  border-color: var(--border);
+}
+
+.form-control:focus {
+  border-color: var(--coffee-soft);
+  box-shadow: 0 0 0 0.2rem rgba(122, 79, 43, 0.12);
+}
+
+.btn-coffee {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--coffee);
+  --bs-btn-border-color: var(--coffee);
+  --bs-btn-hover-bg: var(--coffee-dark);
+  --bs-btn-hover-border-color: var(--coffee-dark);
+  --bs-btn-focus-shadow-rgb: 122, 79, 43;
+}
+
+.btn-outline-coffee {
+  --bs-btn-color: var(--coffee);
+  --bs-btn-border-color: var(--coffee-soft);
+  --bs-btn-hover-bg: var(--coffee-soft);
+  --bs-btn-hover-border-color: var(--coffee-soft);
+  --bs-btn-hover-color: var(--coffee-dark);
+}
+
+.btn-ghost {
+  color: var(--coffee-dark);
+  border: 1px solid transparent;
+  background: rgba(122, 79, 43, 0.08);
+}
+
+.btn-ghost:hover {
+  color: var(--coffee-dark);
+  background: rgba(122, 79, 43, 0.14);
+}
+
+.text-coffee {
+  color: var(--coffee) !important;
+}
+
+.result-shell {
+  padding: 1rem;
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.code-pill,
+.count-pill,
+.credits-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.code-pill {
+  color: var(--coffee-dark);
+  background: rgba(122, 79, 43, 0.1);
+}
+
+.count-pill,
+.credits-pill {
+  color: #fff;
+  background: var(--coffee);
+}
+
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.cert-card {
+  background: linear-gradient(180deg, #fff, #fcf9f6);
+}
+
+.cert-card .card-title {
+  color: var(--coffee-dark);
+}
+
+.provider-tag {
+  color: var(--coffee);
+  font-weight: 700;
+}
+
+.muted-copy,
+.text-muted {
+  color: var(--muted) !important;
+}
+
+.mini-card {
+  padding: 1rem;
+}
+
+.search-hint {
+  font-size: 0.95rem;
+}
+
+.empty-state,
+.error-state,
+.loading-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.course-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--coffee);
+  font-weight: 700;
+}
+
+.course-link:hover {
+  color: var(--coffee-dark);
+  text-decoration: underline;
+}
+
+.small-code {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 575.98px) {
+  .brand-logo {
+	width: 120px;
+  }
+
+  .hero-card .display-6 {
+	font-size: 2rem;
+  }
+
+  .course-header {
+	flex-direction: column;
+  }
+}
+

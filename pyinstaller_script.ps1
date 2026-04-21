@@ -1,1 +1,0 @@
-pyinstaller --onefile 'kuali_driver.py' --icon ".\.images\icon.ico" --hidden-import=lxml --name="SNHU Shortcut"
