@@ -1,0 +1,39 @@
+name: Daily Data Sync
+
+on:
+  schedule:
+    # This runs at exactly 00:00 UTC every day
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual testing
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Data Script
+        run: python cron_update.py
+
+      # This step detects the file change and pushes it back to your repo
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "Daily Sync [bot]"
+          git config --global user.email "daily-sync[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Auto-update data file: $(date)" || echo "No changes to commit"
+          git push
