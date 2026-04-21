@@ -67,6 +67,7 @@ def get_catalog():
         # check if date is between start and end date
         if datetime.fromisoformat(catalog['startDate']) < date < datetime.fromisoformat(catalog['endDate']):
             return catalog['_id']
+    return None
 
 
 def get_certs():
@@ -153,13 +154,13 @@ def get_courses():
 
     return courses
 
-def load_courses(force=False, terminal=False) -> dict:
+def load_courses(force=False) -> dict:
     """
-    This function will check if there is a json file in the repository rss directory called courses.json. If the file exists,
+    This function will check if there is a JSON file in the repository rss directory called courses.json. If the file exists,
     the function will load the file and return a dictionary of Course objects. If the file does not exist, the function
-    will call the get_courses() function to get the courses from the Kuali API and save them to a json file. It will
+    will call the get_courses() function to get the courses from the Kuali API and save them to a JSON file. It will
     also check if the file is older than 24 hours. If the file is older than 24 hours, the function will call the
-    get_courses() function to get the courses from the Kuali API and overwrite/write them to the json file.
+    get_courses() function to get the courses from the Kuali API and overwrite/write them to the JSON file.
 
     :return: A dictionary of Course objects
     """
@@ -183,7 +184,7 @@ def load_courses(force=False, terminal=False) -> dict:
 
         # If the file was modified in the last 24 hours, load the file
         if (datetime.now() - last_modified).total_seconds() < 86400 and not force:
-            # Load the file reading the json file
+            # Load the file reading the JSON file
             try:
                 with open(json_path, 'r') as f:
                     data = json.load(f)
@@ -202,7 +203,7 @@ def load_courses(force=False, terminal=False) -> dict:
     # Get the courses from the Kuali API
     courses = get_courses()
 
-    # Save the courses to a json file
+    # Save the courses to a JSON file
     with open(json_path, 'w') as f:
         data = {}
         for course_code, course in courses.items():
@@ -239,7 +240,7 @@ def sanitize_input(input_value):
 
 if __name__ == "__main__":
     print("Acquiring course information... Please wait.")
-    crses = load_courses(terminal=True)
+    crses = load_courses()
     while True:
         course_to_match = input("\nRespond with 'exit' to leave the program.\n"
                                 "Enter a course code to find associated certifications: ")
