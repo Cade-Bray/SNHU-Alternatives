@@ -1,4 +1,4 @@
-# <a href="https://github.com/Cade-Bray/SNHU-Alternatives"><img src="rss/images/Icon.png?raw=true" alt="Project Logo" style="width:75px; height:auto;"></a> SNHU Alternatives
+# <a href="https://github.com/Cade-Bray/SNHU-Alternatives"><img src="rss/images/Icon.png?raw=true" alt="Project Logo" style="width:50px; height:auto;"></a> SNHU Alternatives
 
 ### This application is now also a <a href="https://cade-bray.github.io/SNHU-Alternatives/">Web Application</a>!
 If you prefer a web interface, you can use the web application to search for SNHU course certificates without needing to
