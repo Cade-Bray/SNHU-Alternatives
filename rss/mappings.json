@@ -1,0 +1,64 @@
+{
+  "AWS Certified Developer Associate": "https://aws.amazon.com/certification/certified-developer-associate/",
+  "Amazon Web Services Certified Cloud Practitioner": "https://aws.amazon.com/certification/certified-cloud-practitioner/",
+  "AWS Certified AI Practitioner": "https://aws.amazon.com/certification/certified-ai-practitioner/",
+  "AWS Certified DevOps Engineer - Professional": "https://aws.amazon.com/certification/certified-devops-engineer-professional/",
+
+  "Exam AI-102: Designing and Implementing a Microsoft Azure AI Solution": "https://learn.microsoft.com/en-us/credentials/certifications/exams/ai-102/",
+  "Microsoft Exam AZ-900 Certified: Azure Fundamentals": "https://learn.microsoft.com/en-us/credentials/certifications/exams/az-900/",
+  "Exam AZ-104: Microsoft Azure Administrator": "https://learn.microsoft.com/en-us/credentials/certifications/exams/az-104/",
+  "Exam MS-900 Microsoft 365 Fundamentals": "https://learn.microsoft.com/en-us/credentials/certifications/exams/ms-900/",
+  "Exam SC-200: Microsoft Security Operations Analyst": "https://learn.microsoft.com/en-us/credentials/certifications/exams/sc-200/",
+  "Exam PL-300: Microsoft Power BI Data Analyst": "https://learn.microsoft.com/en-us/credentials/certifications/exams/pl-300/",
+  "Exam PL-900: Microsoft Power Platform Fundamentals": "https://learn.microsoft.com/en-us/credentials/certifications/exams/pl-900/",
+
+  "DevOps and Software Engineering Professional Certificate": "https://www.coursera.org/professional-certificates/devops-and-software-engineering",
+  "IBM Full Stack Software Developer Professional Certificate": "https://www.coursera.org/professional-certificates/ibm-full-stack-cloud-developer",
+  "Applied Data Science Specialization": "https://www.coursera.org/specializations/applied-data-science",
+  "Data Engineering Professional Certificate": "https://www.coursera.org/professional-certificates/ibm-data-engineer",
+  "IBM Product Manager Professional Certificate": "https://www.coursera.org/professional-certificates/ibm-product-manager",
+
+  "Google Cloud Cybersecurity Certificate": "https://www.coursera.org/professional-certificates/google-cybersecurity",
+  "Google Cloud Data Analytics Certificate": "https://www.coursera.org/professional-certificates/google-advanced-data-analytics",
+  "Google Project Management Professional Certificate": "https://www.coursera.org/professional-certificates/google-project-management",
+  "Google UX Design Professional Certificate": "https://www.coursera.org/professional-certificates/google-ux-design",
+  "Google Business Intelligence Professional Certificate": "https://www.coursera.org/professional-certificates/google-business-intelligence",
+
+  "Android Developer Professional Certificate": "https://www.coursera.org/professional-certificates/meta-android-developer",
+  "Front-End Developer Professional Certificate": "https://www.coursera.org/professional-certificates/meta-front-end-developer",
+
+  "CompTIA Data+": "https://www.comptia.org/certifications/data",
+  "CompTIA IT Fundamentals (ITF+)": "https://www.comptia.org/certifications/it-fundamentals",
+  "CompTIA Server+": "https://www.comptia.org/certifications/server",
+  "CompTIA Pentest+": "https://www.comptia.org/certifications/pentest",
+  "CompTIA SecurityX or CASP+": "https://www.comptia.org/certifications/casp",
+
+  "Certified Associate in Project Management (CAPM)": "https://www.pmi.org/certifications/certified-associate-capm",
+  "Project Management Professional (PMP) Certification": "https://www.pmi.org/certifications/project-management-pmp",
+
+  "Certified Information Systems Security Professional Exam (CISSP)": "https://www.isc2.org/Certifications/CISSP",
+  "System Security Certified Practitioner (SSCP)": "https://www.isc2.org/Certifications/SSCP",
+  "Certified in Cybersecurity": "https://www.isc2.org/Certifications/CC",
+
+  "Financial Accounting": "https://www.sophia.org/online-courses/business/financial-accounting",
+  "Managerial Accounting": "https://www.sophia.org/online-courses/business/managerial-accounting",
+  "Introduction to Business": "https://www.sophia.org/online-courses/business/introduction-to-business",
+  "Introduction to Java Programming": "https://www.sophia.org/online-courses/computer-science-and-it/introduction-to-java-programming",
+  "Introduction to Networking": "https://www.sophia.org/online-courses/computer-science-and-it/introduction-to-networking",
+  "Business Law": "https://www.sophia.org/online-courses/business/business-law",
+  "Conflict Resolution": "https://www.sophia.org/online-courses/business/conflict-resolution",
+  "College Algebra": "https://www.sophia.org/online-courses/math/college-algebra",
+  "Human Biology": "https://www.sophia.org/online-courses/science/human-biology",
+
+  "Business 303: Management Information Systems": "https://study.com/academy/course/business-303-management-information-systems.html",
+  "Computer Science 102: Fundamentals of Information Technology": "https://study.com/academy/course/computer-science-102-fundamentals-of-information-technology.html",
+  "Computer Science 107: Database Fundamentals": "https://study.com/academy/course/computer-science-107-database-fundamentals.html",
+  "Computer Science 109: Introduction to Programming": "https://study.com/academy/course/computer-science-109-introduction-to-programming.html",
+  "Computer Science 113: Programming in Python": "https://study.com/academy/course/computer-science-113-programming-in-python.html",
+  "Computer Science 115: Programming in Java": "https://study.com/academy/course/computer-science-115-programming-in-java.html",
+  "Computer Science 201: Data Structures & Algorithms": "https://study.com/academy/course/computer-science-201-data-structures.html",
+  "Business 112: Intro to Project Management": "https://study.com/academy/course/business-112-intro-to-project-management.html",
+  "Business 311: Project Management": "https://study.com/academy/course/business-311-project-management.html",
+  "Criminal Justice 104: Introduction to Criminology": "https://study.com/academy/course/criminal-justice-104-introduction-to-criminology.html",
+  "Psychology 101: Intro to Psychology": "https://study.com/academy/course/psychology-101.html"
+}

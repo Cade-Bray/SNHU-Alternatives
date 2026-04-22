@@ -138,6 +138,34 @@ body.bg-cream {
 
 .cert-card {
   background: linear-gradient(180deg, #fff, #fcf9f6);
+  transition: all 0.3s ease;
+}
+
+a.cert-card {
+  cursor: pointer;
+  color: inherit;
+  border-left: 4px solid var(--coffee) !important;
+  position: relative;
+}
+
+a.cert-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(122, 79, 43, 0.02) 0%, transparent 100%);
+  border-radius: 1.25rem;
+  pointer-events: none;
+}
+
+a.cert-card:hover,
+a.cert-card:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 45px rgba(122, 79, 43, 0.12);
+  background: linear-gradient(180deg, #fcf9f6, #f9f2eb);
+  border-left-color: var(--coffee-dark);
 }
 
 .cert-card .card-title {
@@ -230,6 +258,194 @@ body.bg-cream {
   color: var(--coffee);
   text-decoration: underline;
   font-weight: 700;
+}
+
+/* Link disclaimer custom popup styling */
+body.link-disclaimer-open {
+  overflow: hidden;
+}
+
+.link-disclaimer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(45, 31, 22, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1090;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.link-disclaimer-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.link-disclaimer-popup {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 60px rgba(122, 79, 43, 0.15);
+  max-width: 500px;
+  width: 100%;
+  max-height: calc(100dvh - 2rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.link-disclaimer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  border-radius: 1.25rem 1.25rem 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+}
+
+.link-disclaimer-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.link-disclaimer-close {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.link-disclaimer-close:hover {
+  color: var(--text);
+}
+
+.link-disclaimer-close::before {
+  content: '✕';
+}
+
+.link-disclaimer-body {
+  padding: 1.5rem;
+  color: var(--text);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.link-disclaimer-body p {
+  margin-bottom: 1rem;
+  color: var(--muted);
+}
+
+.link-disclaimer-body ul {
+  list-style-position: inside;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+}
+
+.link-disclaimer-body ul li {
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.link-disclaimer-body .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.link-disclaimer-body .form-check-input {
+  margin-top: 0;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  accent-color: var(--coffee);
+}
+
+.link-disclaimer-body .form-check-label {
+  color: var(--text);
+  font-weight: 500;
+  cursor: pointer;
+  margin: 0;
+}
+
+.link-disclaimer-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 1.25rem 1.25rem;
+  justify-content: flex-end;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.link-disclaimer-footer .btn {
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 575.98px) {
+  .link-disclaimer-overlay {
+    align-items: flex-end;
+    padding: 0.5rem;
+  }
+
+  .link-disclaimer-popup {
+    max-width: 100%;
+    max-height: calc(100dvh - 1rem);
+    border-radius: 1rem;
+  }
+
+  .link-disclaimer-header {
+    padding: 1rem;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .link-disclaimer-body {
+    padding: 1rem;
+  }
+
+  .link-disclaimer-footer {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  .link-disclaimer-footer .btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 575.98px) {

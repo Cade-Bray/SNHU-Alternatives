@@ -62,10 +62,43 @@
             <div class="card-body p-4">
                 <h2 class="h5 fw-bold mb-3">Privacy, Disclaimer & Rights</h2>
                 <p class="mb-3">View the full privacy policy and disclaimer information on the dedicated page.</p>
-                <a href="privacy-disclaimer.html" class="btn btn-coffee">Open privacy policy</a>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="privacy-disclaimer.html" class="btn btn-coffee">Open privacy policy</a>
+                    <button id="navigation-warning-toggle" type="button" class="btn btn-outline-coffee">Enable/Disable Navigation Warnings</button>
+                </div>
             </div>
         </section>
     </main>
+
+    <!-- External link disclaimer popup -->
+    <div id="link-disclaimer-overlay" class="link-disclaimer-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="link-disclaimer-title">
+      <div class="link-disclaimer-popup">
+        <div class="link-disclaimer-header">
+          <h2 class="link-disclaimer-title">Leaving SNHU Alternatives</h2>
+          <button type="button" class="link-disclaimer-close" id="link-disclaimer-close" aria-label="Close"></button>
+        </div>
+        <div class="link-disclaimer-body">
+          <p class="mb-3">You are about to navigate to an external website. Please note:</p>
+          <ul class="mb-3">
+            <li>This site is not affiliated with our website</li>
+            <li>The URL may not be current or correct</li>
+            <li>The destination website may be unsafe or unavailable</li>
+            <li>Always verify URLs with your institution before enrolling</li>
+            <li>'Remember my choice' can be changed at the foot of our site.</li>
+          </ul>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="link-disclaimer-remember">
+            <label class="form-check-label" for="link-disclaimer-remember">
+              Remember my choice
+            </label>
+          </div>
+        </div>
+        <div class="link-disclaimer-footer">
+          <button type="button" class="btn btn-outline-coffee" id="link-disclaimer-cancel">Cancel</button>
+          <button type="button" class="btn btn-coffee" id="link-disclaimer-confirm">Continue to site</button>
+        </div>
+      </div>
+    </div>
 
     <script src="rss/cookie-consent.js" defer></script>
     <script src="rss/search.js" defer></script>

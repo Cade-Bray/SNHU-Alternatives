@@ -1,14 +1,46 @@
 const DATA_URL = 'rss/courses.json';
+const MAPPINGS_URL = 'rss/mappings.json';
+const LINK_DISCLAIMER_COOKIE = 'snhu_hide_link_disclaimer';
+const LINK_DISCLAIMER_MAX_AGE_SECONDS = 43200;
 
 // Application state and element references
 const state = {
   courses: {},
   courseKeys: [],
+  mappings: {},
   loaded: false,
-  loading: false
+  loading: false,
+  pendingLinkUrl: null
 };
 
 const elements = {};
+
+/**
+ * Looks up a certification URL in the mappings by combining provider and title.
+ * Tries the exact combination first, then falls back to just the title.
+ * @param cert - The certification object containing provider and title properties.
+ * @returns {string|null} The URL if found, or null if not found.
+ */
+function getCertificationUrl(cert) {
+  if (!cert || !state.mappings) {
+    return null;
+  }
+  
+  const fullKey = `${cert.provider || ''} ${cert.title || ''}`.trim();
+  const titleKey = (cert.title || '').trim();
+  
+  // Try exact match with provider + title
+  if (state.mappings[fullKey]) {
+    return state.mappings[fullKey];
+  }
+  
+  // Try title only
+  if (state.mappings[titleKey]) {
+    return state.mappings[titleKey];
+  }
+  
+  return null;
+}
 
 /**
  * Sends a search analytics event only when the consent script has enabled tracking.
@@ -91,14 +123,29 @@ function getQueryCourse() {
  * Updates the URL's 'course' query parameter to reflect the current search term without reloading the page. If a
  * courseId is provided, it sets the parameter; if not, it removes it.
  * @param courseId - The course ID to set in the URL, or an empty string to remove the parameter.
+ * @param {boolean} push - When true, creates a new history entry; otherwise updates the current one.
  */
-function updateUrl(courseId) {
+function updateUrl(courseId, push = false) {
+  const normalized = sanitizeInput(courseId);
   const url = new URL(window.location.href);
-  if (courseId) {
-	url.searchParams.set('course', courseId);
+  const currentCourse = sanitizeInput(url.searchParams.get('course') || '');
+
+  if (normalized) {
+  url.searchParams.set('course', normalized);
   } else {
 	url.searchParams.delete('course');
   }
+
+  // Avoid duplicate entries when the target query is already active.
+  if (currentCourse === normalized) {
+  return;
+  }
+
+  if (push) {
+  window.history.pushState({}, '', url);
+  return;
+  }
+
   window.history.replaceState({}, '', url);
 }
 
@@ -147,19 +194,33 @@ function emptyMarkup(message) {
 
 /**
  * Generates the HTML markup for a certification card, which displays the provider, title, and PID of a certification.
+ * If the certification is found in mappings.json, the card is wrapped in an anchor tag to make it clickable.
  * It also includes default values for missing information and uses the escapeHtml function to prevent XSS
  * vulnerabilities.
  * @param cert - The certification object containing provider, title, and pid properties.
  * @returns {string} The HTML string for the certification card.
  */
 function certificationCard(cert) {
+  const url = getCertificationUrl(cert);
+  const cardContent = `
+	<div class="card-body">
+	  <div class="provider-tag mb-2">${escapeHtml((cert.provider || 'Unknown provider').trim())}</div>
+	  <h3 class="h6 card-title fw-bold mb-3">${escapeHtml((cert.title || 'Untitled certification').trim())}</h3>
+	  <div class="small text-muted mb-0">PID: <span class="small-code">${escapeHtml(cert.pid || 'n/a')}</span></div>
+	</div>
+  `;
+  
+  if (url) {
+	return `
+	  <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="cert-card card shadow-sm h-100 text-decoration-none">
+		${cardContent}
+	  </a>
+	`;
+  }
+  
   return `
 	<div class="cert-card card shadow-sm h-100">
-	  <div class="card-body">
-		<div class="provider-tag mb-2">${escapeHtml((cert.provider || 'Unknown provider').trim())}</div>
-		<h3 class="h6 card-title fw-bold mb-3">${escapeHtml((cert.title || 'Untitled certification').trim())}</h3>
-		<div class="small text-muted mb-0">PID: <span class="small-code">${escapeHtml(cert.pid || 'n/a')}</span></div>
-	  </div>
+	  ${cardContent}
 	</div>
   `;
 }
@@ -224,6 +285,8 @@ function renderResultsForExact(courseId, course) {
 	  </div>
 	</div>
   `;
+
+  setupLinkDisclaimers();
 }
 
 /**
@@ -268,6 +331,8 @@ function renderResultsForPartial(courseId, matches) {
   elements.resultsArea.querySelectorAll('[data-course]').forEach((button) => {
 	button.addEventListener('click', () => performSearch(button.dataset.course || ''));
   });
+
+  setupLinkDisclaimers();
 }
 
 /**
@@ -325,6 +390,24 @@ function renderCourseSearch(courseId) {
 }
 
 /**
+ * Asynchronously loads the certification URL mappings from the specified MAPPINGS_URL.
+ * Updates the application state with the mappings' data. If loading fails, mappings remain empty
+ * and certifications display as non-clickable cards.
+ * @returns {Promise<void>} A promise that resolves when the mappings have been loaded or when an error occurs.
+ */
+async function loadMappings() {
+  try {
+	const response = await fetch(MAPPINGS_URL, { cache: 'no-cache' });
+	if (response.ok) {
+	  state.mappings = await response.json();
+	}
+  } catch (error) {
+	// Silently fail - mappings are optional; cards will just not be clickable
+	console.debug('Could not load certification mappings:', error);
+  }
+}
+
+/**
  * Asynchronously loads the course data from the specified DATA_URL. It checks if the data is already loaded or
  * currently loading to prevent duplicate requests. If the data is successfully loaded, it updates the application state
  * with the course data and renders the initial search results based on the URL query parameter. If there is an error
@@ -341,6 +424,8 @@ async function loadCourseData() {
   elements.resultsArea.innerHTML = loadingMarkup();
 
   try {
+	await loadMappings();
+	
 	const response = await fetch(DATA_URL, { cache: 'no-cache' });
 	if (!response.ok) {
 	  elements.resultsArea.innerHTML = `
@@ -386,7 +471,7 @@ function performSearch(rawValue) {
   if (elements.courseInput) {
 	elements.courseInput.value = normalized;
   }
-  updateUrl(normalized);
+  updateUrl(normalized, true);
   renderCourseSearch(normalized);
 }
 
@@ -448,11 +533,15 @@ function bindEvents() {
 	  elements.courseInput.value = '';
 	  elements.courseInput.focus();
 	}
-	updateUrl('');
+	updateUrl('', true);
 	renderCourseSearch('');
   });
 
   elements.copyLinkButton.addEventListener('click', copyCurrentLink);
+
+  if (elements.navigationWarningToggleButton) {
+	elements.navigationWarningToggleButton.addEventListener('click', toggleNavigationWarnings);
+  }
 
   elements.courseInput.addEventListener('input', () => {
 	const normalized = sanitizeInput(elements.courseInput.value);
@@ -469,6 +558,164 @@ function bindEvents() {
 }
 
 /**
+ * Checks if the user has previously opted to hide the link disclaimer.
+ * @returns {boolean} True if the user has disabled the disclaimer, false otherwise.
+ */
+function shouldSkipLinkDisclaimer() {
+  const cookie = document.cookie
+	.split('; ')
+	.find((row) => row.startsWith(LINK_DISCLAIMER_COOKIE));
+  return cookie && cookie.split('=')[1] === 'true';
+}
+
+/**
+ * Saves the user's preference to hide the link disclaimer in a cookie.
+ * Cookie expires in 12 hours (43200 seconds).
+ */
+function setLinkDisclaimerHidden() {
+  document.cookie = `${LINK_DISCLAIMER_COOKIE}=true; Max-Age=${LINK_DISCLAIMER_MAX_AGE_SECONDS}; Path=/; SameSite=Lax`;
+}
+
+/**
+ * Clears the user's saved link disclaimer preference so warnings are shown again.
+ */
+function clearLinkDisclaimerHidden() {
+  document.cookie = `${LINK_DISCLAIMER_COOKIE}=; Max-Age=0; Path=/; SameSite=Lax`;
+}
+
+/**
+ * Toggles navigation warnings by setting or removing the link disclaimer cookie.
+ */
+function toggleNavigationWarnings() {
+  if (shouldSkipLinkDisclaimer()) {
+	clearLinkDisclaimerHidden();
+  updateNavigationWarningToggleLabel();
+	setStatus('Navigation warnings enabled.', 'coffee');
+	return;
+  }
+
+  setLinkDisclaimerHidden();
+  updateNavigationWarningToggleLabel();
+  setStatus('Navigation warnings disabled for 12 hours.', 'warning');
+}
+
+/**
+ * Updates the navigation warning toggle button text to reflect the current warning state.
+ */
+function updateNavigationWarningToggleLabel() {
+  if (!elements.navigationWarningToggleButton) {
+	return;
+  }
+
+  const warningsDisabled = shouldSkipLinkDisclaimer();
+  elements.navigationWarningToggleButton.textContent = `Navigation Warnings: ${warningsDisabled ? 'Disabled' : 'Enabled'}`;
+  elements.navigationWarningToggleButton.classList.toggle('btn-coffee', !warningsDisabled);
+  elements.navigationWarningToggleButton.classList.toggle('btn-outline-coffee', warningsDisabled);
+}
+
+/**
+ * Shows the link disclaimer popup and handles navigation after user confirmation.
+ * If the user has opted to not see the disclaimer again, navigates immediately.
+ * @param {string} url - The URL to navigate to after disclaimer is confirmed.
+ */
+function showLinkDisclaimer(url) {
+  if (shouldSkipLinkDisclaimer()) {
+	window.open(url, '_blank', 'noopener,noreferrer');
+	return;
+  }
+
+  state.pendingLinkUrl = url;
+  const overlay = document.getElementById('link-disclaimer-overlay');
+  const checkbox = document.getElementById('link-disclaimer-remember');
+  const confirmButton = document.getElementById('link-disclaimer-confirm');
+  const cancelButton = document.getElementById('link-disclaimer-cancel');
+  const closeButton = document.getElementById('link-disclaimer-close');
+
+  if (!overlay) {
+	// Fallback if popup element doesn't exist
+	window.open(url, '_blank', 'noopener,noreferrer');
+	return;
+  }
+
+  // Reset checkbox for this popup instance
+  if (checkbox) {
+	checkbox.checked = false;
+  }
+
+  // Show the popup
+  overlay.classList.remove('hidden');
+  document.body.classList.add('link-disclaimer-open');
+
+  // Create a single handler that can be reused and removed
+  const handleConfirm = () => {
+	if (checkbox && checkbox.checked) {
+	  setLinkDisclaimerHidden();
+	  updateNavigationWarningToggleLabel();
+	}
+	if (state.pendingLinkUrl) {
+	  window.open(state.pendingLinkUrl, '_blank', 'noopener,noreferrer');
+	}
+	hideLinkDisclaimer();
+  };
+
+  const handleCancel = () => {
+	hideLinkDisclaimer();
+  };
+
+  // Remove any previous listeners to avoid duplicates
+  confirmButton.replaceWith(confirmButton.cloneNode(true));
+  cancelButton.replaceWith(cancelButton.cloneNode(true));
+  closeButton.replaceWith(closeButton.cloneNode(true));
+
+  // Reselect elements after cloning
+  const newConfirmButton = document.getElementById('link-disclaimer-confirm');
+  const newCancelButton = document.getElementById('link-disclaimer-cancel');
+  const newCloseButton = document.getElementById('link-disclaimer-close');
+
+  // Add event listeners to new elements
+  newConfirmButton.addEventListener('click', handleConfirm);
+  newCancelButton.addEventListener('click', handleCancel);
+  newCloseButton.addEventListener('click', handleCancel);
+
+  // Also allow Escape key to close
+  const handleEscape = (event) => {
+	if (event.key === 'Escape') {
+	  handleCancel();
+	  document.removeEventListener('keydown', handleEscape);
+	}
+  };
+  document.addEventListener('keydown', handleEscape);
+}
+
+/**
+ * Hides the link disclaimer popup by adding the hidden class.
+ */
+function hideLinkDisclaimer() {
+  const overlay = document.getElementById('link-disclaimer-overlay');
+  if (overlay) {
+	overlay.classList.add('hidden');
+  }
+  document.body.classList.remove('link-disclaimer-open');
+}
+
+/**
+ * Sets up event listeners for certification card links to show the disclaimer modal
+ * instead of navigating directly.
+ */
+function setupLinkDisclaimers() {
+  const certLinks = document.querySelectorAll('a.cert-card');
+  certLinks.forEach((link) => {
+	link.addEventListener('click', (event) => {
+	  event.preventDefault();
+	  const url = link.getAttribute('href');
+	  if (url) {
+		showLinkDisclaimer(url);
+	  }
+	});
+  });
+}
+
+/**
  * Initializes the application by selecting necessary DOM elements, binding event listeners, and loading the course
  * data. It checks for the presence of essential elements before proceeding to ensure that the application can function
  * correctly. This function is called when the DOM content is fully loaded, allowing the application to set up its state
@@ -479,6 +726,7 @@ function init() {
   elements.courseInput = document.getElementById('course-input');
   elements.clearButton = document.getElementById('clear-button');
   elements.copyLinkButton = document.getElementById('copy-link-button');
+  elements.navigationWarningToggleButton = document.getElementById('navigation-warning-toggle');
   elements.resultsArea = document.getElementById('results-area');
   elements.statusText = document.getElementById('status-text');
 
@@ -487,6 +735,7 @@ function init() {
   }
 
   bindEvents();
+  updateNavigationWarningToggleLabel();
   loadCourseData().then();
 }
 
