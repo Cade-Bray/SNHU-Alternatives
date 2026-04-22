@@ -11,6 +11,22 @@ const state = {
 const elements = {};
 
 /**
+ * Sends a search analytics event only when the consent script has enabled tracking.
+ * @param query - The normalized query string.
+ * @param resultType - The type of result returned (exact, partial, none).
+ * @param resultCount - The number of matching results.
+ */
+function trackSearchEvent(query, resultType, resultCount) {
+  if (window.SNHUAlternativesAnalytics && typeof window.SNHUAlternativesAnalytics.trackSearch === 'function') {
+	window.SNHUAlternativesAnalytics.trackSearch({
+	  query,
+	  resultType,
+	  resultCount
+	});
+  }
+}
+
+/**
  * Sanitizes user input by removing spaces, dashes, and underscores, trimming whitespace, and converting to uppercase.
  * @param value - The input value to sanitize.
  * @returns {string} The sanitized input string.
@@ -287,6 +303,7 @@ function renderCourseSearch(courseId) {
   const exact = state.courses[normalized];
   if (exact) {
 	renderResultsForExact(normalized, exact);
+	trackSearchEvent(normalized, 'exact', (exact.Certifications || []).length);
 	setStatus(`Exact match for ${normalized}.`, 'coffee');
 	return;
   }
@@ -297,11 +314,13 @@ function renderCourseSearch(courseId) {
 
   if (matches.length > 0) {
 	renderResultsForPartial(normalized, matches);
+	trackSearchEvent(normalized, 'partial', matches.length);
 	setStatus(`Partial match for ${normalized}.`, 'coffee');
 	return;
   }
 
   renderNoResults(normalized);
+  trackSearchEvent(normalized, 'none', 0);
   setStatus(`No matches for ${normalized}.`, 'danger');
 }
 
